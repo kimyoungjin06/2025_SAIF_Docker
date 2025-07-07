@@ -20,7 +20,7 @@ function App() {
     
     // 실제 API 호출 (나중에 백엔드 연결시)
     try {
-      const response = await fetch('/api/vote', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/vote`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ option: selectedOption })

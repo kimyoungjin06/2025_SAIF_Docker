@@ -5,6 +5,14 @@ Docker 컨테이너를 이용한 투표 웹 애플리케이션
 
 ## 구성
 ```
+┌─────────────────┐    ┌─────────────────┐
+│   voting-app    │    │   voting-api    │
+│   container     │    │   container     │
+│   (port 3000)   │    │   (port 3001)   │
+└─────────────────┘    └─────────────────┘
+         │                       │
+         └───── Docker Network ──┘
+
 voting-project/
 ├── voting-app/
 │   ├── Dockerfile
@@ -40,35 +48,12 @@ docker network create voting-network
 ```bash
 cd api-server
 docker build -t voting-api .
-docker run --name voting-api --network voting-network -p 3001:3001 voting-api
+docker run -d --name voting-api --network voting-network -p 3001:3001 voting-api
 ```
 
-
-## Step0: git clone
-```bash
-git clone 2025_SAIF_Docker
-```
-
-
-
-## Step1: voting-app
+## 3. APP 실행
 ```bash
 cd ../voting-app
 docker build -t voting-app .
-docker run --name voting-frontend --network voting-network -p 3000:3000 voting-app
-```
-
-## Step2: voting-api
-```bash
-cd api-server
-docker build -t voting-api .
-docker run --name voting-api --network voting-network -p 3001:3001 voting-api
-```
-
-## Step3: Docker Network
-
-```bash
-docker network create voting-network
-docker run --network voting-network --name voting-api -p 3001:3001 voting-api
-docker run --network voting-network --name voting-frontend -p 3000:3000 voting-app
+docker run -d --name voting-frontend --network voting-network -p 3000:3000 -e REACT_APP_API_URL="http://voting-api-container:3001" voting-app
 ```
