@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="Docker 기반 투표 앱" />
+    <title>투표 앱</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <noscript>JavaScript를 활성화해야 이 앱을 사용할 수 있습니다.</noscript>
+    
+    <!-- 강의 관련 이미지 추가 -->
+    <header style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 1rem; text-align: center; color: white;">
+      <div style="display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto;">
+        <!-- 재단 로고 (로컬 파일) -->
+        <img src="./assets/saif_logo.png" alt="SAIF" style="height: 60px; object-fit: contain;" />
+        
+        <div>
+          <h1 style="margin: 0; font-size: 1.5rem; font-weight: bold;">Docker 실습 강의</h1>
+          <p style="margin: 0; opacity: 0.9;">컨테이너 기반 웹 애플리케이션 개발</p>
+        </div>
+        
+        <!-- 강사 사진 (URL) -->
+        <img src="./assets/lecturer.png" alt="강사 프로필" style="height: 60px; width: 60px; border-radius: 50%; object-fit: cover;" />
+      </div>
+    </header>
+
+    <div id="root"></div>
+    
+    <footer style="background: #f8f9fa; padding: 1rem; text-align: center; margin-top: 2rem; border-top: 1px solid #e9ecef;">
+      <p style="margin: 0; color: #6c757d; font-size: 0.9rem;">
+        💡 이 앱은 Docker 컨테이너에서 실행되고 있습니다 | 
+        📧 문의: docker-support@foundation.org
+      </p>
+    </footer>
+  </body>
+</html>

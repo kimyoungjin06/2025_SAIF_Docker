@@ -1,0 +1,15 @@
+/* 추가 스타일링이 필요하면 여기에 */
+.voting-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.vote-option {
+  transition: all 0.3s ease;
+}
+
+.vote-option:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}

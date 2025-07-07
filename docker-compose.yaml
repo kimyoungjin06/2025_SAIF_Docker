@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  # API 서버
+  voting-api:
+    build: ./api-server
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+    networks:
+      - voting-network
+
+  # 프론트엔드
+  voting-app:
+    build: ./voting-app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - voting-api
+    environment:
+      - REACT_APP_API_URL=http://voting-api:3001
+    networks:
+      - voting-network
+
+networks:
+  voting-network:
+    driver: bridge
