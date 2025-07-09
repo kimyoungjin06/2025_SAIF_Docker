@@ -59,6 +59,8 @@ function App() {
   };
 
   if (hasVoted) {
+    const DASHBOARD_URL = process.env.REACT_APP_DASHBOARD_URL || 'http://localhost:3002';
+    
     return (
       <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center p-4">
         <div className="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full text-center">
@@ -76,10 +78,11 @@ function App() {
           
           <div className="space-y-3">
             <button
-              onClick={() => alert('결과 페이지는 다음 단계에서 만들어요!')}
-              className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+              onClick={() => window.open(DASHBOARD_URL, '_blank')}
+              className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
             >
               📊 실시간 결과 보기
+              <span className="text-xs opacity-75">(새 창)</span>
             </button>
             
             <button
