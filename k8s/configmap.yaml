@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: voting-config
+  namespace: ${USER_ID}-voting
+data:
+  NODE_ENV: "development"
+  DB_HOST: "postgres-service"
+  DB_PORT: "5432"
+  DB_NAME: "voting_db"
+  DB_USER: "postgres"
+  REACT_APP_API_URL: "http://localhost:${API_PORT}"
+  REACT_APP_DASHBOARD_URL: "http://localhost:${DASHBOARD_PORT}"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: voting-secret
+  namespace: ${USER_ID}-voting
+type: Opaque
+data:
+  # base64로 인코딩된 비밀번호
+  # echo -n "voting_password_123" | base64
+  DB_PASSWORD: dm90aW5nX3Bhc3N3b3JkXzEyMw==
+  POSTGRES_PASSWORD: dm90aW5nX3Bhc3N3b3JkXzEyMw==
