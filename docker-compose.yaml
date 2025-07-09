@@ -1,24 +1,23 @@
 services:
   postgres:
     image: postgres:15-alpine
-    container_name: voting-postgres-${USER_ID}
     environment:
       POSTGRES_DB: voting_db
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: voting_password_123
     volumes:
-      - postgres_data_${USER_ID}:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
       - ./database/init.sql:/docker-entrypoint-initdb.d/01-init.sql
     ports:
-      - "${DB_PORT}:5432"
+      - "30013:5432"
     networks:
-      - voting-network-${USER_ID}
+      - voting-network
 
   voting-api:
     build: ./api-server
-    container_name: voting-api-${USER_ID}
     depends_on:
       - postgres
+    restart: always
     environment:
       - NODE_ENV=development
       - DB_HOST=postgres
@@ -27,38 +26,36 @@ services:
       - DB_USER=postgres
       - DB_PASSWORD=voting_password_123
     ports:
-      - "${API_PORT}:3001"
+      - "30011:3001"
     networks:
-      - voting-network-${USER_ID}
+      - voting-network
 
   voting-app:
     build: ./voting-app
-    container_name: voting-frontend-${USER_ID}
     depends_on:
       - voting-api
     environment:
-      - REACT_APP_API_URL=http://localhost:${API_PORT}
-      - REACT_APP_DASHBOARD_URL=http://localhost:${DASHBOARD_PORT}
+      - REACT_APP_API_URL=http://localhost:30011
+      - REACT_APP_DASHBOARD_URL=http://localhost:30012
     ports:
-      - "${FRONTEND_PORT}:3000"
+      - "30010:3000"
     networks:
-      - voting-network-${USER_ID}
+      - voting-network
 
   dashboard:
     build: ./dashboard
-    container_name: voting-dashboard-${USER_ID}
     depends_on:
       - voting-api
     environment:
-      - REACT_APP_API_URL=http://localhost:${API_PORT}
+      - REACT_APP_API_URL=http://localhost:30011
     ports:
-      - "${DASHBOARD_PORT}:3000"
+      - "30012:3000"
     networks:
-      - voting-network-${USER_ID}
+      - voting-network
 
 volumes:
-  postgres_data_1:
+  postgres_data:
 
 networks:
-  voting-network-1:
+  voting-network:
     driver: bridge
