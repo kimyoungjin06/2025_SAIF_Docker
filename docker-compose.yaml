@@ -1,19 +1,19 @@
-version: '3.8'
-
+# version 제거 + healthcheck 제거
 services:
-  # API 서버
   voting-api:
     build: ./api-server
+    container_name: voting-api
     ports:
       - "3001:3001"
     environment:
       - NODE_ENV=development
     networks:
       - voting-network
+    restart: unless-stopped
 
-  # 프론트엔드
   voting-app:
     build: ./voting-app
+    container_name: voting-frontend
     ports:
       - "3000:3000"
     depends_on:
@@ -22,6 +22,7 @@ services:
       - REACT_APP_API_URL=http://voting-api:3001
     networks:
       - voting-network
+    restart: unless-stopped
 
 networks:
   voting-network:
