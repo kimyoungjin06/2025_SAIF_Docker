@@ -7,10 +7,10 @@ function App() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const votingOptions = [
-    { id: 'pizza', name: '🍕 피자', description: '이탈리안 스타일의 클래식한 선택' },
-    { id: 'chicken', name: '🍗 치킨', description: '바삭하고 맛있는 한국의 소울푸드' },
-    { id: 'burger', name: '🍔 버거', description: '든든하고 만족스러운 아메리칸 스타일' },
-    { id: 'ramen', name: '🍜 라면', description: '따뜻하고 간편한 한 끼 해결사' }
+    { id: 'pizza', name: '피자', description: '이탈리안 스타일의 클래식한 선택' },
+    { id: 'chicken', name: '치킨', description: '바삭하고 맛있는 한국의 소울푸드' },
+    { id: 'burger', name: '버거', description: '든든하고 만족스러운 아메리칸 스타일' },
+    { id: 'ramen', name: '라면', description: '따뜻하고 간편한 한 끼 해결사' }
   ];
 
   const handleVote = async () => {
@@ -18,24 +18,38 @@ function App() {
     
     setIsSubmitting(true);
     
-    // 실제 API 호출 (나중에 백엔드 연결시)
+    // 환경 변수 또는 기본값 사용
+    const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
+    
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/vote`, {
+      console.log('API URL:', API_URL); // 디버깅용
+      console.log('Voting for:', selectedOption);
+      
+      const response = await fetch(`${API_URL}/api/vote`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ option: selectedOption })
       });
       
-      if (response.ok) {
+      const data = await response.json();
+      console.log('Vote response:', data);
+      
+      if (data.success) {
         setHasVoted(true);
+      } else {
+        alert('투표 실패: ' + data.error);
       }
     } catch (error) {
-      console.log('API 서버가 아직 없어서 시뮬레이션 모드로 실행');
-      // 개발 중에는 시뮬레이션
+      console.error('투표 중 오류 발생:', error);
+      alert('서버 연결 실패. 시뮬레이션 모드로 전환합니다.');
+      // 시뮬레이션 모드
       setTimeout(() => {
         setHasVoted(true);
         setIsSubmitting(false);
       }, 1000);
+      return;
+    } finally {
+      setIsSubmitting(false);
     }
   };
 

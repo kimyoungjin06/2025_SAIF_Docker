@@ -13,10 +13,6 @@ RUN npm install
 # 소스 코드 복사
 COPY . .
 
-# 빌드 타임에 환경 변수 설정
-ARG REACT_APP_API_URL=http://voting-api:3001
-ENV REACT_APP_API_URL=$REACT_APP_API_URL
-
 # 앱이 사용할 포트 노출
 EXPOSE 3000
 
