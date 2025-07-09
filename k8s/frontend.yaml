@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+  namespace: ${USER_ID}-voting
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: voting-frontend
+  template:
+    metadata:
+      labels:
+        app: voting-frontend
+    spec:
+      containers:
+      - name: voting-frontend
+        image: ${USER_ID}-voting-app:latest
+        imagePullPolicy: Never  # 로컬 이미지 사용
+        ports:
+        - containerPort: 3000
+        env:
+        - name: REACT_APP_API_URL
+          valueFrom:
+            configMapKeyRef:
+              name: voting-config
+              key: REACT_APP_API_URL
+        - name: REACT_APP_DASHBOARD_URL
+          valueFrom:
+            configMapKeyRef:
+              name: voting-config
+              key: REACT_APP_DASHBOARD_URL
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+  namespace: ${USER_ID}-voting
+spec:
+  selector:
+    app: voting-frontend
+  ports:
+  - port: 3000
+    targetPort: 3000
+  type: ClusterIP
+---
+# NodePort 서비스 (외부 접속용)
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-nodeport
+  namespace: ${USER_ID}-voting
+spec:
+  selector:
+    app: voting-frontend
+  ports:
+  - port: 3000
+    targetPort: 3000
+    nodePort: ${FRONTEND_PORT}
+  type: NodePort
