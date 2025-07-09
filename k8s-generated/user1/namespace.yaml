@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: voting-system
+  labels:
+    name: voting-system
+---
+# 사용자별 네임스페이스 템플릿
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: user1-voting
+  labels:
+    name: user1-voting
+    user: user1

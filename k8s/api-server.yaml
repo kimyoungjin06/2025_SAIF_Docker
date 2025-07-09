@@ -52,13 +52,13 @@ spec:
               key: DB_PASSWORD
         livenessProbe:
           httpGet:
-            path: /api/health
+            path: /health
             port: 3001
           initialDelaySeconds: 30
           periodSeconds: 10
         readinessProbe:
           httpGet:
-            path: /api/health
+            path: /health
             port: 3001
           initialDelaySeconds: 5
           periodSeconds: 5

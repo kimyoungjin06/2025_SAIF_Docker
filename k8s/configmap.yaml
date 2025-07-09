@@ -9,8 +9,8 @@ data:
   DB_PORT: "5432"
   DB_NAME: "voting_db"
   DB_USER: "postgres"
-  REACT_APP_API_URL: "http://localhost:${API_PORT}"
-  REACT_APP_DASHBOARD_URL: "http://localhost:${DASHBOARD_PORT}"
+  REACT_APP_API_URL: "http://${MINIKUBE_IP}:${API_PORT}"
+  REACT_APP_DASHBOARD_URL: "http://${MINIKUBE_IP}:${DASHBOARD_PORT}"
 ---
 apiVersion: v1
 kind: Secret
