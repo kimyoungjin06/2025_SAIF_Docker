@@ -1,0 +1,79 @@
+services:
+  # PostgreSQL 데이터베이스
+  postgres:
+    image: postgres:15-alpine
+    container_name: voting-postgres
+    environment:
+      POSTGRES_DB: voting_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: voting_password_123
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/01-init.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - voting-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d voting_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # API 서버 (데이터베이스 연결)
+  voting-api:
+    build: ./api-server
+    container_name: voting-api
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - NODE_ENV=development
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=voting_db
+      - DB_USER=postgres
+      - DB_PASSWORD=voting_password_123
+    ports:
+      - "3001:3001"
+    networks:
+      - voting-network
+    restart: unless-stopped
+
+  # 프론트엔드
+  voting-app:
+    build: ./voting-app
+    container_name: voting-frontend
+    depends_on:
+      - voting-api
+    environment:
+      - REACT_APP_API_URL=http://localhost:3001
+    ports:
+      - "3000:3000"
+    networks:
+      - voting-network
+    restart: unless-stopped
+    
+  # 대시보드
+  dashboard:
+    build: ./dashboard
+    container_name: voting-dashboard
+    depends_on:
+      - voting-api
+    environment:
+      - REACT_APP_API_URL=http://localhost:3001
+    ports:
+      - "3002:3000"
+    networks:
+      - voting-network
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  voting-network:
+    driver: bridge

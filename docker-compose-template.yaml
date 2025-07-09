@@ -57,8 +57,8 @@ services:
       - voting-network-${USER_ID}
 
 volumes:
-  postgres_data_1:
+  postgres_data_${USER_ID}:
 
 networks:
-  voting-network-1:
+  voting-network-${USER_ID}:
     driver: bridge
