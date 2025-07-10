@@ -50,7 +50,7 @@ services:
     depends_on:
       - voting-api
     environment:
-      - REACT_APP_API_URL=http://localhost:3001
+      - REACT_APP_API_URL=http://voting-api:3001
     ports:
       - "3000:3000"
     networks:
