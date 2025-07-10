@@ -35,7 +35,7 @@ services:
     depends_on:
       - voting-api
     environment:
-      - REACT_APP_API_URL=http://voting-api:30011
+      - REACT_APP_API_URL=http://localhost:30011
       - REACT_APP_DASHBOARD_URL=http://localhost:30012
     ports:
       - "30010:3000"
@@ -47,7 +47,7 @@ services:
     depends_on:
       - voting-api
     environment:
-      - REACT_APP_API_URL=http://voting-api:30011
+      - REACT_APP_API_URL=http://localhost:30011
     ports:
       - "30012:3000"
     networks:
