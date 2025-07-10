@@ -47,6 +47,40 @@ LEFT JOIN votes v ON vo.option_key = v.option_key
 GROUP BY vo.option_key, vo.option_name, vo.description, vo.emoji
 ORDER BY vote_count DESC;
 
+-- 투표 통계 함수
+CREATE OR REPLACE FUNCTION get_vote_statistics()
+RETURNS TABLE (
+  total_votes BIGINT,
+  unique_voters BIGINT,
+  total_sessions BIGINT,
+  most_voted_option TEXT,
+  most_voted_count BIGINT
+)
+LANGUAGE SQL
+AS $$
+  SELECT 
+    (SELECT COUNT(*) FROM votes) AS total_votes,
+    (SELECT COUNT(DISTINCT voter_ip) FROM votes) AS unique_voters,
+    (SELECT COUNT(*) FROM voting_sessions) AS total_sessions,
+    (SELECT option_key FROM votes GROUP BY option_key ORDER BY COUNT(*) DESC LIMIT 1) AS most_voted_option,
+    (SELECT COUNT(*) FROM votes WHERE option_key = (
+        SELECT option_key FROM votes GROUP BY option_key ORDER BY COUNT(*) DESC LIMIT 1
+    )) AS most_voted_count;
+$$;
+
+-- 최근 24시간 시간대별 투표 수
+CREATE OR REPLACE VIEW hourly_vote_stats AS
+SELECT 
+  date_trunc('hour', created_at) AS hour,
+  option_key,
+  COUNT(*) AS vote_count
+FROM votes
+WHERE created_at >= NOW() - INTERVAL '2 days' -- 넉넉히 잡기
+GROUP BY hour, option_key
+ORDER BY hour DESC;
+
+
+
 -- 인덱스 생성
 CREATE INDEX IF NOT EXISTS idx_votes_option_key ON votes(option_key);
 CREATE INDEX IF NOT EXISTS idx_votes_created_at ON votes(created_at);
